@@ -5,59 +5,50 @@
 #include <malloc.h>
 #include<string.h>
 
-struct nodo {
-    int entradas;
+struct usuario {
+    int entradasPedidas;
+    int entradasOtorgadas;
     char nombre[30];
     char rut[11];
-    struct nodo *siguiente;
+    struct usuario *siguiente;
 };
 
 
-typedef struct nodo tNodo;
+typedef struct usuario tUsuario;
 
-typedef tNodo *LISTA;
+typedef tUsuario *LISTA;
 
 struct entradas {
     LISTA vendidas;
     LISTA declinadas;
 };
+
 typedef struct entradas tEntradas;
 
 typedef tEntradas *ENTRADAS;
 
-LISTA crearNodo(char nombre[30], int numEntradas, char rut[11], struct nodo *siguiente) {
+int ENTRADAS_DISPONIBLES = 0;
+
+LISTA crearNodo(char nombre[30], int numEntradas, char rut[11], struct usuario *siguiente, int entradasOtorgadas) {
     LISTA aux;
-    aux = malloc(sizeof(tNodo));
+    aux = malloc(sizeof(tUsuario));
     strcpy(aux->rut, rut);
     strcpy(aux->nombre, nombre);
-    aux->entradas = numEntradas;
+    aux->entradasPedidas = numEntradas;
+    aux->entradasOtorgadas = entradasOtorgadas;
     aux->siguiente = siguiente;
 }
 
-LISTA insertarAlFinalDeLaLista(LISTA L, char nombre[30], int numEntradas, char rut[11]) {
+LISTA insertarAlFinalDeLaLista(LISTA L, char nombre[30], int numEntradas, char rut[11], int numEntradasOtorgadas) {
     if (L == NULL) {
-        return crearNodo(nombre, numEntradas, rut, NULL);
+        return crearNodo(nombre, numEntradas, rut, NULL,numEntradasOtorgadas);
     }
     LISTA aux;
     aux = L;
     while (aux->siguiente != NULL) {
         aux = aux->siguiente;
     }
-    aux->siguiente = crearNodo(nombre, numEntradas, rut, NULL);
-    return L;
-}
-
-LISTA insertarSiguienteAlFinalDeLaLista(LISTA L, LISTA siguiente) {
-    if (L == NULL){
-        L = siguiente;
-        L->siguiente = NULL;
-        return L;
-    }
-    LISTA aux = L;
-    while (aux->siguiente != NULL) {
-        aux = aux->siguiente;
-    }
-    aux->siguiente = siguiente;
+    aux->siguiente = crearNodo(nombre, numEntradas, rut, NULL,numEntradasOtorgadas);
     return L;
 }
 
@@ -66,90 +57,74 @@ void imprimirLista(LISTA lista) {
     int i = 0;
     printf("\n");
     while (aux != NULL) {
-        printf("AUX = %i | Nombre: %s Entradas: %i %s rut: %s siguiente-> "
-               "\n", i, aux->nombre, aux->entradas, aux->rut,
-               !aux->siguiente ? "NULL" : aux->siguiente->nombre);
+        printf("AUX = %i | Nombre: %s Entradas: %i rut: %s\n", i, aux->nombre, aux->entradasPedidas, aux->rut);
         i++;
         aux = aux->siguiente;
     }
+    free(aux);
 }
 
-int vecesRepetidas(LISTA lista, tNodo *nodo) {
-    int veces = 0;
+int existe(LISTA lista, char rut[11]) {
+    LISTA aux = lista;
+    int counts = 0;
+    while (aux != NULL && rut != NULL) {
+        if (strcmp(aux->rut, rut) == 0){
+            counts++;
+        }
+        if (counts >= 2) return 0;
+        aux = aux->siguiente;
+    }
+    free(aux);
+    return 1;
+}
+
+LISTA agregarEntradas(LISTA lista, char rut[11], int entradas) {
     LISTA aux = lista;
     while (aux != NULL) {
-        if (strcmp(aux->rut, nodo->rut) == 0) {
-            veces = veces + aux->entradas;
+        if (strcmp(aux->rut, rut) == 0) {
+            aux-> entradasPedidas = aux->entradasPedidas + entradas;
         }
         aux = aux->siguiente;
     }
-    return veces;
+    return lista;
 }
 
-LISTA existe(LISTA lista, tNodo *nodo) {
-    LISTA aux = lista;
+LISTA limpiarYReducirLista(LISTA listaOriginal){
+    LISTA aux = listaOriginal;
+    LISTA nuevaLista = NULL;
+    imprimirLista(listaOriginal);
     while (aux != NULL) {
-        if (strcmp(aux->rut, nodo->rut) == 0) {
-            return aux;
+        int existeEnLaLista = existe(nuevaLista , aux->rut);
+        if ( existeEnLaLista == 0 ){
+            nuevaLista = agregarEntradas(nuevaLista, aux->rut, aux->entradasPedidas);
+        } else {
+            nuevaLista = insertarAlFinalDeLaLista(nuevaLista, aux->nombre, aux->entradasPedidas, aux->rut, aux->entradasOtorgadas);
         }
+        printf("\nExiste: %s rut: %s : %s", aux->nombre,aux->rut, existeEnLaLista == 0 ? "Si" : "No");
+
         aux = aux->siguiente;
     }
-    return NULL;
+    printf("\nNueva lista: ");
+    imprimirLista(nuevaLista);
+    return nuevaLista;
 }
 
 ENTRADAS asignarEntradas(ENTRADAS entradas, LISTA lista) {
-    LISTA aux = lista;
-    LISTA nuevaLista = NULL;
-    while (aux != NULL) {
-        LISTA subAux = aux->siguiente;
-        while (subAux != NULL) {
-            if (strcmp(aux->rut, subAux->rut) == 0) {
-                aux->entradas = aux->entradas + subAux->entradas;
-            }
-            subAux = subAux->siguiente;
+    LISTA nuevaLista = limpiarYReducirLista(lista);
+    while (nuevaLista != NULL) {
+        if (nuevaLista->entradasPedidas <= 2) {
+            entradas->vendidas = insertarAlFinalDeLaLista(entradas->vendidas, nuevaLista->nombre, nuevaLista->entradasPedidas, nuevaLista->rut, nuevaLista->entradasPedidas);
+        } else {
+            entradas->declinadas = insertarAlFinalDeLaLista(entradas->declinadas, nuevaLista->nombre, nuevaLista->entradasPedidas, nuevaLista->rut, nuevaLista->entradasPedidas);
         }
-        nuevaLista = insertarSiguienteAlFinalDeLaLista(nuevaLista, &aux);
-        //imprimirLista(aux);
-        aux = aux->siguiente;
+        nuevaLista = nuevaLista->siguiente;
     }
-    LISTA entradasFiltradas = NULL;
-    //imprimirLista(nuevaLista);
-
-    aux = nuevaLista;
-    while (aux != NULL){
-        LISTA esta = existe(entradasFiltradas, aux);
-        if (esta == NULL){
-            entradasFiltradas = insertarSiguienteAlFinalDeLaLista(entradasFiltradas, &aux);
-        }
-        aux = aux->siguiente;
-    }
-    imprimirLista(entradasFiltradas);
-
-    LISTA aceptadas = NULL;
-    LISTA declinadas = NULL;
-    entradas->vendidas = aceptadas;
-    entradas->declinadas = declinadas;
+    /*printf("\nVendidas: ");
+    imprimirLista(entradas->vendidas);
+    printf("Declinadas: ");
+    imprimirLista(entradas->declinadas);*/
     return entradas;
 }
-
-LISTA retornarEntradasUnicas(LISTA listaInicial) {
-    LISTA aux = listaInicial;
-    LISTA listaUnica = NULL;
-    while (aux != NULL) {
-        int repetidas = vecesRepetidas(listaInicial, aux);
-        if (repetidas <= 2) {
-            if (listaUnica == NULL) {
-                listaUnica = aux;
-            } else {
-                listaUnica->siguiente = aux;
-            }
-        }
-        //printf("Veces repetidas de RUT: %s es: %i\n", aux->rut, repetidas);
-        aux = aux->siguiente;
-    }
-    return listaUnica;
-}
-
 
 void leeArchivo() {
     char nombreArchivo[30], nombreArchivoSalida[30], linea[150];
@@ -172,7 +147,6 @@ void leeArchivo() {
 
     LISTA lista = NULL;
     while (fgets(linea, sizeof(linea), archivo)) {
-        if (linea[0] == "\n") continue;
         char *rut;
         char *nombre;
         char *cadena;
@@ -182,10 +156,8 @@ void leeArchivo() {
         nombre = strtok(NULL, ",");
         cadena = strtok(NULL, ",");
         entradas = atoi(cadena);
-        //printf("Rut: %11s nombre: %20s             entradas: %i\n", rut, nombre, entradas);
         if (rut == NULL || nombre == NULL) continue;
-        lista = insertarAlFinalDeLaLista(lista, nombre, entradas, rut);
-        /*write data inside the sal file*/
+        lista = insertarAlFinalDeLaLista(lista, nombre, entradas, rut,0);
         fprintf(archivoSalida, "Rut: %11s nombre: %20s             entradas: %i \n", rut, nombre, entradas);
     }
 

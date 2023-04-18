@@ -28,3 +28,4 @@
 20474853-0,Alberto Mora,2
 9386624-k,FedericoSantis,5
 16934659-4,IgnacioNunez,1
+2349573-5,Aquiles Vera,6
