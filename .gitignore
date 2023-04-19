@@ -1,6 +1,8 @@
 */output
 *.sal
 *.exe
+*.asg
+*.esp
 # Prerequisites
 *.d
 
