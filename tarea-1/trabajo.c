@@ -18,7 +18,6 @@ typedef tUsuario *ListaUsuarios;
 struct entradas
 {
     ListaUsuarios vendidas;
-    ListaUsuarios declinadas;
     ListaUsuarios pendientes;
     int disponibles;
 };
@@ -89,7 +88,9 @@ ListaUsuarios leeArchivo()
 {
     char linea[150];
     printf("Ingresa el nombre del archivo: ");
-    strcpy(nombreArchivo, "datos2.txt");
+
+    fgets(nombreArchivo, 50, stdin);
+    strtok(nombreArchivo, "\n");
     FILE *archivo = fopen(nombreArchivo, "r");
 
     if (archivo == NULL)
@@ -144,21 +145,13 @@ EntradasUsuarios retornarEntradasYAsignarEntradas(ListaUsuarios lista)
 {
     ListaUsuarios aux = lista;
     ListaUsuarios vendidas = NULL;
-    ListaUsuarios declinadas = NULL;
     ListaUsuarios pendientes = NULL;
     int entradasDisponibles = 50;
     while (aux != NULL)
     {
-        if (aux->entradasPedidas <= 5 && aux->entradasPedidas > 0)
-        {
-            if (aux->entradasPedidas >= 3 && aux->entradasPedidas <= 5)
-            {
-                if (entradasDisponibles - aux->entradasPedidas <= 0)
-                {
-                    declinadas = insertarAlFinalDeLaLista(declinadas, aux->nombre, aux->entradasPedidas, aux->rut, 0);
-                }
-                else
-                {
+        if (aux->entradasPedidas <= 5 && aux->entradasPedidas > 0) {
+            if (aux->entradasPedidas >= 3 && aux->entradasPedidas <= 5) {
+                if (entradasDisponibles - aux->entradasPedidas > 0) {
                     vendidas = insertarAlFinalDeLaLista(vendidas, aux->nombre, aux->entradasPedidas, aux->rut, 2);
                     entradasDisponibles = entradasDisponibles - 2;
                 }
@@ -176,15 +169,10 @@ EntradasUsuarios retornarEntradasYAsignarEntradas(ListaUsuarios lista)
                 }
             }
         }
-        else
-        {
-            declinadas = insertarAlFinalDeLaLista(declinadas, aux->nombre, aux->entradasPedidas, aux->rut, 0);
-        }
         aux = aux->siguiente;
     }
     EntradasUsuarios entradas = malloc(sizeof(tEntradas));
     entradas->vendidas = vendidas;
-    entradas->declinadas = declinadas;
     entradas->pendientes = pendientes;
     entradas->disponibles = entradasDisponibles;
 
