@@ -9,18 +9,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="21f6a507-2dea-406a-a8e6-50f8d33d0b9d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/Tarea 1.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Algoritmo-y-Estructura-de-Datos.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/discord.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/discord.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/git_toolbox_prj.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tarea-2/bastidas_tironi_bruno.c" beforeDir="false" afterPath="$PROJECT_DIR$/tarea-2/bastidas_tironi_bruno.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tarea-2/red1.aee" beforeDir="false" />
+    <list default="true" id="21f6a507-2dea-406a-a8e6-50f8d33d0b9d" name="Changes" comment="Terminado el codigo de la tarea2.">
+      <change afterPath="$PROJECT_DIR$/tarea-2/red3.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,11 +64,23 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1685942963895</updated>
-      <workItem from="1685942965904" duration="3207000" />
+      <workItem from="1685942965904" duration="4824000" />
     </task>
+    <task id="LOCAL-00001" summary="Terminado el codigo de la tarea2.">
+      <created>1685946243790</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1685946243790</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Terminado el codigo de la tarea2." />
+    <option name="LAST_COMMIT_MESSAGE" value="Terminado el codigo de la tarea2." />
   </component>
 </project>
