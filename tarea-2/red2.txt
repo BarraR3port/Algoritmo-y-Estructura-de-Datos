@@ -1,0 +1,24 @@
+10 12
+Cesar
+Pablo
+Felipe
+Jorge
+Rocio
+Vale
+Julian
+Luis
+Rodrigo
+Bruno
+Rodrigo,Julian
+Julian,Bruno
+Luis,Rodrigo
+Cesar,Rocio
+Rocio,Vale
+Vale,Felipe
+Felipe,Luis
+Felipe,Rodrigo
+Pablo,Cesar
+Rodrigo,Julian
+Jorge,Rodrigo
+Bruno,Rodrigo
+
