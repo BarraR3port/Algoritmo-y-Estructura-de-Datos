@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="bastidas_tironi_bruno.c" type="CppFileRunConfiguration" factoryName="CppFileRunConfiguration" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$PROJECT_DIR$/tarea-2" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Tarea 1" TARGET_NAME="bastidas_tironi_bruno.c - MinGW" CONFIG_NAME="bastidas_tironi_bruno.c">
+    <option name="sourceFile" value="tarea-2\bastidas_tironi_bruno.c" />
+    <option name="toolchainName" value="MinGW" />
+    <method v="2">
+      <option name="com.jetbrains.cidr.cpp.runfile.CppFileBuildBeforeRunTaskProvider$BasicBuildBeforeRunTask" enabled="true" />
+    </method>
+  </configuration>
+</component>
