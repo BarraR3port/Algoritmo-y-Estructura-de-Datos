@@ -305,7 +305,7 @@ void almacenarArchivoSalida(char *nombreArchivo)
 
     strcpy(nombreArchivoSalida, nombreArchivo);
     strtok(nombreArchivoSalida, ".");
-    strcat(nombreArchivoSalida, ".aee");
+    strcat(nombreArchivoSalida, ".aec");
 
     FILE *archivoSalida = fopen(nombreArchivoSalida, "w");
 
