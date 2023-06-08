@@ -135,7 +135,7 @@ int leerArchivoYCrearGrafo(char *nombreArchivo)
     for (int i = 0; i < numNodos; i++)
     {
         char nombreUsuario[25];
-        fscanf(archivo, "%s", &nombreUsuario);
+        fscanf(archivo, "%s", nombreUsuario);
         agregarUsuariosALaCola(nombreUsuario, i);
     }
 
@@ -144,7 +144,7 @@ int leerArchivoYCrearGrafo(char *nombreArchivo)
         char linea[50];
         char nombreUsuario1[25], nombreUsuario2[25];
 
-        fscanf(archivo, "%s", &linea);
+        fscanf(archivo, "%s", linea);
         char *lineaActual = strtok(linea, ",");
 
         if (lineaActual)
