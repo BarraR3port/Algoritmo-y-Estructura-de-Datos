@@ -60,13 +60,14 @@ int cuentaMayoresQueValor(ABO arbol, int valor)
     cont += cuentaMayoresQueValor(arbol->der, valor);
     return cont;
 }
-void inOrden(ABO arbol)
+void escribeArbol(ABO arbol, FILE *archivo)
 {
     if (arbol != NULL)
     {
-        inOrden(arbol->izq);
-        printf("%i ", arbol->info);
-        inOrden(arbol->der);
+        escribeArbol(arbol->izq, archivo);
+        fprintf(archivo, "%i\n", arbol->info);
+        printf("%i\n", arbol->info);
+        escribeArbol(arbol->der, archivo);
     }
 }
 
@@ -81,9 +82,23 @@ void escribeEnArchivo(ABO arbol)
     }
     else
     {
-        inOrdenArchivo(arbol, archivo);
+        escribeArbol(arbol, archivo);
         fclose(archivo);
     }
+}
+
+ABO leerArchivoYCrearArbol(FILE *archivo)
+{
+    ABO arbol;
+    int valor;
+    fscanf(archivo, "%i", &valor);
+    arbol = creaNodo(valor);
+    while (!feof(archivo))
+    {
+        fscanf(archivo, "%i", &valor);
+        Insertar(arbol, valor);
+    }
+    return arbol;
 }
 
 int main()
@@ -110,8 +125,6 @@ int main()
     cont = cuentaMayoresQueValor(arbol, 50);
 
     printf("\nNumero de nodos menores que 50: %i\n\n", cont);
-
-    inOrden(arbol);
 
     escribeEnArchivo(arbol);
 
