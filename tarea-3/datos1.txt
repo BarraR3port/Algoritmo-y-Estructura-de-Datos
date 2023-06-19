@@ -1,0 +1,11 @@
+12333444-2,Maria Reyes,2
+20165233-4,Rocio Morales,2
+20165233-4,RocioMorales,2
+13444555-6,Pedro Diaz,1
+19000111-3,Jose Herrera,1
+13444555-6,Pedro Diaz,2
+12432008-k,Juan Pardo,3
+20165233-4,rocio morales,1
+12432008-k,Juan pardo,5
+12432008-k,juan Pardo,6
+12432008-k,juanpardo,4
