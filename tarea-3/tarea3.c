@@ -1,9 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
+#include <string.h>
 
-struct nodo
-{
+struct nodo {
     char rut[11];
     char nombre[25];
     int entradas;
@@ -13,122 +12,120 @@ struct nodo
 typedef struct nodo tNodo;
 typedef tNodo *ABO;
 
-ABO leeArchivo(char nombreArchivo[50])
-{
-    char linea[150];
-    printf("Ingresa el nombre del archivo: ");
+ABO crearArbol(char rut[11], char nombre[25], int entradas) {
+    ABO arbol = (ABO) malloc(sizeof(tNodo));
+    strcpy(arbol->rut, rut);
+    strcpy(arbol->nombre, nombre);
+    arbol->entradas = entradas;
+    arbol->izq = NULL;
+    arbol->der = NULL;
+    return arbol;
+}
 
-    fgets(nombreArchivo, 50, stdin);
-    strtok(nombreArchivo, "\n");
+ABO insertarNodoOCrear(ABO arbol, char rut[11], char nombre[25], int entradas) {
+    if (arbol == NULL) {
+        arbol = crearArbol(rut, nombre, entradas);
+    } else {
+        int comparacion = strcmp(rut, arbol->rut);
+        if (comparacion == 0) {
+            arbol->entradas += entradas;
+        } else if (comparacion < 0) {
+            arbol->izq = insertarNodoOCrear(arbol->izq, rut, nombre, entradas);
+        } else {
+            arbol->der = insertarNodoOCrear(arbol->der, rut, nombre, entradas);
+        }
+    }
+    return arbol;
+}
+
+ABO leerArchivoYCrearArbol(char *nombreArchivo) {
+    ABO arbol;
+    char linea[150];
     FILE *archivo = fopen(nombreArchivo, "r");
 
-    if (archivo == NULL)
-    {
+    if (archivo == NULL) {
         printf("Archivo invalido o no encontrado, cerrando el programa.");
         exit(-1);
     }
 
-    ABO arbol = NULL;
-    while (fgets(linea, sizeof(linea), archivo))
-    {
+    while (fgets(linea, sizeof(linea), archivo)) {
         char *rut;
         char *nombre;
+        char *cadena;
         int entradas;
         strtok(linea, "\n");
         rut = strtok(linea, ",");
         nombre = strtok(NULL, ",");
+        cadena = strtok(NULL, ",");
         entradas = atoi(cadena);
-        if (rut == NULL || nombre == NULL)
-        {
+        if (rut == NULL || nombre == NULL) {
             continue;
         }
-        arbol = Insertar(arbol, rut, nombre, entradas);
+        arbol = insertarNodoOCrear(arbol, rut, nombre, entradas);
     }
 
     fclose(archivo);
     return arbol;
 }
 
-ABO Insertar(ABO A, char rut[11], char nombre[25], int entradas)
-{
-    if (A == NULL)
-    {
-        A = creaNodo(dato);
+FILE *crearArchivoSalida(FILE *archivo, char *nombreArchivoSalida) {
+    if (archivo != NULL) {
+        return archivo;
     }
-    else
-    {
-        if (strcmp(rut, A->rut) < 0)
-        {
-            A->izq = Insertar(A->izq, rut, nombre, entradas);
-        }
-        else
-        {
-            A->der = Insertar(A->der, rut, nombre, entradas);
-        }
-    }
-    return A;
+    FILE *archivoSalida = fopen(nombreArchivoSalida, "w");
+    return archivoSalida;
 }
 
-int cuentaMayoresQueValor(ABO arbol)
-{
-    int cont = 0;
-    if (arbol == NULL)
+int checkearEntradas(ABO arbol, FILE *archivo) {
+    if (arbol == NULL) {
         return 0;
-    if (arbol->entradas > 2)
-        cont++;
-    cont += cuentaMayoresQueValor(arbol->izq);
-    cont += cuentaMayoresQueValor(arbol->der);
-    return cont;
+    }
+    int count = 0;
+
+    count += checkearEntradas(arbol->izq, archivo);
+
+    if (arbol->entradas > 2) {
+        count++;
+        if (archivo != NULL) {
+            fprintf(archivo, "Rut: %s nombre: %s entradas: %i\n", arbol->rut, arbol->nombre, arbol->entradas);
+        }
+    }
+
+    count += checkearEntradas(arbol->der, archivo);
+
+    return count;
 }
-void escribeArbol(ABO arbol, FILE *archivo)
-{
-    if (arbol != NULL)
-    {
-        escribeArbol(arbol->izq, archivo);
-        fprintf(archivo, "%s\n", arbol->rut);
-        printf("%s\n", arbol->rut);
-        escribeArbol(arbol->der, archivo);
+
+void escribirTotal(ABO arbol, char *nombreArchivo) {
+    char nombreArchivoSalida[30];
+    strcpy(nombreArchivoSalida, nombreArchivo);
+    strtok(nombreArchivoSalida, ".");
+    strcat(nombreArchivoSalida, ".sde");
+    FILE *archivoSalida = crearArchivoSalida(NULL, nombreArchivoSalida);
+    printf("El archivo %s fue generado\n", nombreArchivo);
+    int cantidadDeNoAceptados = checkearEntradas(arbol, archivoSalida);
+    fprintf(archivoSalida, "\nTotal: %d\n", cantidadDeNoAceptados);
+    fclose(archivoSalida);
+}
+
+void procesoPrincipal() {
+    char nombreArchivo[50];
+
+    printf("Ingresa el nombre del archivo: ");
+    fgets(nombreArchivo, 50, stdin);
+    strtok(nombreArchivo, "\n");
+
+    ABO arbol = leerArchivoYCrearArbol(nombreArchivo);
+
+    if (checkearEntradas(arbol, NULL) == 0) {
+        printf("Todos solicitaron la cantidad correcta de entradas\n");
+    } else {
+        escribirTotal(arbol, nombreArchivo);
     }
 }
 
-void escribeEnArchivo(ABO arbol)
-{
-    FILE *archivo;
-    archivo = fopen("arbol.txt", "w");
-    if (archivo == NULL)
-    {
-        printf("\nError al abrir el archivo.");
-        exit(1);
-    }
-    else
-    {
-        escribeArbol(arbol, archivo);
-        fclose(archivo);
-    }
-}
+int main() {
 
-ABO leerArchivoYCrearArbol(FILE *archivo)
-{
-    ABO arbol;
-    while (!feof(archivo))
-    {
-        fscanf(archivo, "%s %s %i", &rut, &nombre, &entradas);
-        arbol = Insertar(arbol, rut, nombre, entradas);
-    }
-    return arbol;
-}
-
-int main()
-{
-
-    ABO arbol = leeArchivo();
-
-    cont = cuentaMayoresQueValor(arbol, 50);
-
-    printf("\nNumero de nodos menores que 50: %i\n\n", cont);
-
-    escribeEnArchivo(arbol);
-
-    printf("\n\n");
+    procesoPrincipal();
     return 0;
 }
